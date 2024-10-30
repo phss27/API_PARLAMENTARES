@@ -1,105 +1,24 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>API Parlamentares e Partidos</title>
-   <!-- Carrega o React, React Dom e Babel -->
-   <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
- 
-   <!-- Don't use this in production: -->
-   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partidos e Parlamentares</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <div id=""></div>
-
-<script>
-  import React, { useState, useEffect } from "react";
-
-  const PARTIDOS_API = "http://127.0.0.1:5501/partidos";
-  const PARLAMENTARES_API = (idPartido) => `http://127.0.0.1:5501/partidos/${idPartido}/parlamentares`;
-
-  function App() {
-    const [partidos, setPartidos] = useState([]);
-    const [parlamentares, setParlamentares] = useState([]);
-    const [selectedPartido, setSelectedPartido] = useState("");
-
-    // Função para obter os partidos da API
-    const fetchPartidos = async () => {
-      try {
-        const response = await fetch(PARTIDOS_API);
-        const data = await response.json();
-        setPartidos(data.partidos); 
-      } catch (error) {
-        console.error("Erro ao obter os partidos:", error);
-      }
-    };
-
-    // Função para obter os parlamentares de um partido selecionado
-    const fetchParlamentares = async (idPartido) => {
-      try {
-        const response = await fetch(PARLAMENTARES_API(idPartido));
-        const data = await response.json();
-        setParlamentares(data.parlamentares); 
-      } catch (error) {
-        console.error("Erro ao obter os parlamentares:", error);
-      }
-    };
-
-    // UseEffect para carregar a lista de partidos quando o componente montar
-    useEffect(() => {
-      fetchPartidos();
-    }, []);
-
-    // Função chamada quando um partido é selecionado
-    const handlePartidoChange = (event) => {
-      const partidoId = event.target.value;
-      setSelectedPartido(partidoId);
-      if (partidoId) {
-        fetchParlamentares(partidoId);
-      } else {
-        setParlamentares([]);
-      }
-    };
-
-    return (
-      <div>
+    <div class="container">
         <h1>Selecione um Partido</h1>
-
-        {/* Caixa de seleção de partidos */}
-        <select value={selectedPartido} onChange={handlePartidoChange}>
-          <option value="">Selecione um partido</option>
-          {partidos.map((partido) => (
-            <option key={partido.id} value={partido.id}>
-              {partido.nome}
-            </option>
-          ))}
+        
+        <!-- Caixa de seleção de partidos -->
+        <select id="partido-select">
+            <option value="">Selecione um partido</option>
         </select>
 
-        {/* Lista de parlamentares */}
-        <div>
-          {parlamentares.length > 0 ? (
-            <ul>
-              {parlamentares.map((parlamentar) => (
-                <li key={parlamentar.id}>
-                  <h3>{parlamentar.nome}</h3>
-                  <p>Cargo: {parlamentar.cargo}</p>
-                  <p>Email: {parlamentar.email}</p>
-                  <p>Partido: {parlamentar.partido}</p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            selectedPartido && <p>Não há parlamentares para este partido.</p>
-          )}
-        </div>
-      </div>
-    );
-  }
+        <!-- Lista onde serão exibidos os parlamentares -->
+        <div id="parlamentares-container"></div>
+    </div>
 
-  export default App;
-</script>
+    <script src="script.js"></script>
 </body>
 </html>
